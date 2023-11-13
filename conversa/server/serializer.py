@@ -1,5 +1,12 @@
 from rest_framework import serializers
-from .models import Server,Channel
+from .models import Server,Channel,Category
+from drf_spectacular.utils import extend_schema_field
+
+class CategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Category
+        fields = "__all__"
+
 
 class ChannelSerializer(serializers.ModelSerializer):
     class Meta:
@@ -13,7 +20,8 @@ class ServerSerializer(serializers.ModelSerializer):
         model = Server
         exclude = ("member",) 
     
-    def get_num_members(self,obj):
+    @extend_schema_field(int)
+    def get_num_members(self,obj) -> int:
         if hasattr(obj,"num_members"):
             return obj.num_members
         return None

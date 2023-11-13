@@ -1,10 +1,21 @@
 from django.db.models import Count
+from rest_framework import status
 from rest_framework import viewsets
+from drf_spectacular.utils import extend_schema
 from rest_framework.exceptions import ValidationError,AuthenticationFailed
-from .serializer import ServerSerializer
+from .serializer import ServerSerializer,CategorySerializer
 from .schema import server_list_docs
 from rest_framework.response import Response
-from .models import Server
+from .models import Server,Category
+
+class CategoryListViewSet(viewsets.ViewSet):
+    queryset = Category.objects.all()
+
+    @extend_schema(responses=CategorySerializer)
+    def list(self, request):
+        serializer = CategorySerializer(self.queryset, many=True)
+        return Response(serializer.data)
+    
 
 class ServerListViewSet(viewsets.ViewSet):
     queryset = Server.objects.all()
@@ -99,8 +110,8 @@ class ServerListViewSet(viewsets.ViewSet):
             self.queryset = self.queryset.annotate(num_members=Count("member"))
 
         if by_serverId:
-            if not request.user.is_authenticated:
-                raise AuthenticationFailed()
+            #if not request.user.is_authenticated:
+            #   raise AuthenticationFailed()
             try:
                 self.queryset = self.queryset.filter(id=by_serverId)    
                 if not self.queryset.exists():
@@ -117,4 +128,50 @@ class ServerListViewSet(viewsets.ViewSet):
     
         serializer = ServerSerializer(self.queryset,many=True,context={"num_members":with_num_members})
         return Response(serializer.data)
+
+
+# class ServerCreateViewSet(viewsets.ViewSet):
+#     serializer_class = ServerSerializer
+
+#     @server_create_docs
+#     def create(self, request):
+#         """
+#           Create a new server.
+
+#             **Args:**
+#                 request (Request): The HTTP request object containing the server data.
+
+#             **Returns:**
+#                 Response: A JSON response containing the created server data or validation errors.
+
+#             **Raises:**
+#                 N/A
+
+#             **Example:**
+#                 The following example demonstrates how to create a new server using a POST request:
+
+#                 ```bash
+#                 POST /api/server/create
+#                 {
+#                     "name": "My Server",
+#                     "category": "Gaming",
+#                     "description": "A gaming community server",
+#                     "members": ["user1", "user2"],
+#                     "banner": upload image,
+#                     "icon": upload icon,
+#                 }
+#                 ```
+
+#             Note:
+#                 This method uses the ServerSerializer for data validation and saving. If the provided data is
+#                 valid, the server is saved, and a response with the server data and HTTP status 201 Created is returned.
+#                 If there are validation errors, a response with the errors and HTTP status 400 Bad Request is returned.
+#         """
+        
+#         serializer = self.serializer_class(data=request.data)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(serializer.data, status=status.HTTP_201_CREATED)
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
