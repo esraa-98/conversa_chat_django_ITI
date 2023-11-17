@@ -16,6 +16,8 @@ class ChannelSerializer(serializers.ModelSerializer):
 class ServerSerializer(serializers.ModelSerializer):
     num_members = serializers.SerializerMethodField()
     channel_server = ChannelSerializer(many=True)
+    category = serializers.StringRelatedField() # to change dafault item.name(id) into name 
+    
     class Meta:
         model = Server
         exclude = ("member",) 

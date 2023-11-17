@@ -3,6 +3,7 @@ from rest_framework import status
 from rest_framework import viewsets
 from drf_spectacular.utils import extend_schema
 from rest_framework.exceptions import ValidationError,AuthenticationFailed
+from rest_framework.permissions import IsAuthenticated #Is Authenticated
 from .serializer import ServerSerializer,CategorySerializer
 from .schema import server_list_docs
 from rest_framework.response import Response
@@ -19,6 +20,7 @@ class CategoryListViewSet(viewsets.ViewSet):
 
 class ServerListViewSet(viewsets.ViewSet):
     queryset = Server.objects.all()
+    # permission_classes = [IsAuthenticated]
     
     @server_list_docs
     def list(self,request):

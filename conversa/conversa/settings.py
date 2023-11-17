@@ -1,5 +1,6 @@
-from pathlib import Path
 import os
+from pathlib import Path
+
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -33,6 +34,7 @@ INSTALLED_APPS = [
     # external
     'drf_spectacular',
     'rest_framework',
+    "corsheaders",
     # internal
     "account",
     "server",
@@ -42,6 +44,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    "corsheaders.middleware.CorsMiddleware",
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -141,9 +144,15 @@ PECTACULAR_SETTINGS = {
     'SERVE_INCLUDE_SCHEMA': True,
 }
 
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",
+]
+
 # Configure Django Channels layers for handling WebSocket communication.
 CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels.layers.InMemoryChannelLayer"
     }
 }
+
+# CORS_ALLOW_ALL_ORIGINS = True
