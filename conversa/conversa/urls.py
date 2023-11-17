@@ -18,18 +18,20 @@ from django.contrib import admin
 from django.urls import path
 from drf_spectacular.views import SpectacularAPIView,SpectacularSwaggerView
 from rest_framework.routers import DefaultRouter
-from server.views import ServerListViewSet,CategoryListViewSet
+from server.views import ServerListViewSet,CategoryViewSet,ChannelViewSet,ServerViewSet
 from django.conf import settings
 from django.conf.urls.static import static
 from webchat.consumer import WebChatConsumer
-from webchat.views import MessageViewSet
-
+from webchat.views import MessageViewSet,ConversationViewSet
+# from server.routers import routers
 # automatic generate url
 router = DefaultRouter()
-router.register("api/server/select",ServerListViewSet,basename="list")
-# router.register("api/server/create",ServerCreateViewSet,basename="create")
-router.register("api/server/category", CategoryListViewSet)
+router.register("api/server/select",ServerListViewSet)
+router.register("api/server/channel",ChannelViewSet)
+router.register("api/server/category", CategoryViewSet)
+router.register("api/server",ServerViewSet)
 router.register("api/messages",MessageViewSet,basename="message")
+router.register("api/conversations", ConversationViewSet, basename='conversation')
 
 urlpatterns = [
     path('admin/', admin.site.urls),

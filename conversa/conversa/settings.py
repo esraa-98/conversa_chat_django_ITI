@@ -33,6 +33,7 @@ INSTALLED_APPS = [
     # external
     'drf_spectacular',
     'rest_framework',
+    "corsheaders",
     # internal
     "account",
     "server",
@@ -42,6 +43,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    "corsheaders.middleware.CorsMiddleware",
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -134,12 +136,16 @@ REST_FRAMEWORK = {
     ]
 }
 
-PECTACULAR_SETTINGS = {
-    'TITLE': 'Your Project API',
-    'DESCRIPTION': 'Your project description',
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Conversa API',
+    'DESCRIPTION': 'web chat',
     'VERSION': '1.0.0',
     'SERVE_INCLUDE_SCHEMA': True,
+    'COMPONENT_SPLIT_REQUEST': True,
 }
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",
+]
 
 # Configure Django Channels layers for handling WebSocket communication.
 CHANNEL_LAYERS = {
